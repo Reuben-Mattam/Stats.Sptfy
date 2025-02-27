@@ -1,0 +1,102 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>16thJan</title>
+    <link rel="stylesheet" href="style.css">
+    <script type="text/javascript" src="/eel.js"></script>
+    <style>
+        #upload-section {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100vw;
+            height: 100vh;
+            background: rgba(0, 0, 0, 0.5);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+        
+        #upload-container {
+            width: 33vw;
+            height: 33vh;
+            background: white;
+            box-shadow: 0 4px 10px rgba(0, 0, 0, 0.2);
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: space-around;
+            padding: 1rem;
+            border-radius: 8px;
+            text-align: center;
+        }
+        
+        .box-div {
+            width: 100%;
+            height: 40%;
+            background: lightgray;
+            border-radius: 4px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            cursor: pointer;
+            color: #555;
+            font-weight: bold;
+            transition: background 0.3s ease;
+        }
+        
+        .box-div:hover {
+            background: #ddd;
+        }
+    </style>
+</head>
+<body>
+    <section id="upload-section">
+        <div id="upload-container">
+            <h1 class="headings1">Upload File</h1>
+            <label class="box-div" for="file-input">Click to Upload Excel File</label>
+            <input type="file" id="file-input" accept=".xls, .xlsx" style="display: none;" />
+            <p class="subtitles1">Only Excel files (.xls, .xlsx) are allowed.</p>
+        </div>
+    </section>
+    <script>
+        // upload the file
+        document.addEventListener('DOMContentLoaded', function() {
+            const fileInput = document.getElementById('file-input');
+            
+            fileInput.addEventListener('change', async (event) => {
+                const file = event.target.files[0];
+                if (file) {
+                    const reader = new FileReader();
+                    
+                    reader.onload = async function(e) {
+                        try {
+                            const result = await eel.process_file(file.name, e.target.result)();
+                            
+                            if (result.success) {
+                                // data stored in local storage
+                                localStorage.setItem('musicData', JSON.stringify(result.top_music));
+                                window.location.href = 'main.html';
+                            } else {
+                                alert('Error processing file: ' + result.message);
+                            }
+                        } catch (error) {
+                            console.error('Error processing file:', error);
+                            alert('There was an error uploading the file. Please try again.');
+                        }
+                    };
+                    
+                    reader.onerror = function() {
+                        console.error('Error reading file');
+                        alert('Error reading the file. Please try again.');
+                    };
+                    
+                    reader.readAsDataURL(file);
+                }
+            });
+        });
+    </script>
+</body>
+</html>

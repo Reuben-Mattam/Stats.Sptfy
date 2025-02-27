@@ -1,0 +1,5 @@
+*.env
+
+.cache         # ignore .cache
+16thJan/       # ignore folder 16thJan
+spotify_songs.xlsx  # ignore file spotify_songs.xlsx

@@ -1,0 +1,603 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>16thJan</title>
+    <link rel="stylesheet" href="style.css">
+    <script src="script.js"></script>
+    <script type="text/javascript" src="eel.js"></script>
+
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Lexend:wght@100..900&display=swap" rel="stylesheet">
+    
+    <link rel="icon" type="image/png" href="/logo.png">
+    <style>
+        body {
+            background-color: #F4F4F4;
+            font-family: 'Lexend', sans-serif;
+        }
+
+        h2 {
+            color: black;
+            font-size: 24px;
+        }
+
+        h3 {
+            color: #999999;
+            font-size: 12px;
+        }
+
+        #dashboard {
+            width: 100%;
+            height: 100%;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            overflow: hidden;
+            
+        }
+
+        /* top spacing */
+        .spacing {
+            width: 100%;
+            height: 15%;
+            display: flex;
+        }
+
+        .vertical-line {
+            width: calc(70% + 2px);
+            height: 100%;
+            border-right: 2px solid #E5E5E5;
+        }
+
+        .nav {
+            padding: 20px;
+            display: flex;
+            align-items: center;
+            justify-content: start;
+        }
+
+        .spacing-right {
+            width: calc(30% - 2px);
+            height: 100%;
+        }
+
+        #newupload {
+            justify-content: end;
+            text-decoration: none;
+            color: inherit;
+        }
+
+        #newupload:hover {
+            color: black;
+        }
+        /* top spacing */
+        
+
+        #dashboard-container {
+            width: 100%;
+            height: 60%;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            overflow: hidden;
+        }
+
+
+        /* Left panel styling */
+        #left-dashboard {
+            width: 70%;
+            height: 100%;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+        }
+
+        #graph-container {
+            display: flex;
+            align-items: center;
+            height: 100%;
+        }
+
+        #graph {
+            width: 750px;
+            height: 100%;
+            box-sizing: border-box;
+            border-radius: 8px;
+            display: flex;
+            flex-direction: column;
+            overflow-y: auto;
+            padding: 10px;
+            
+            -ms-overflow-style: none;
+            scrollbar-width: none;
+        }
+        
+        #graph::-webkit-scrollbar {
+            display: none;
+        }        
+        
+        .box-container {
+            display: flex;
+            flex-direction: column;
+            width: 100%;
+        }
+        
+        .box {
+            width: 100%;
+            display: flex;
+            align-items: center;
+            border-bottom: 1px solid #e0e0e0;
+            padding: 10px 0;
+        }
+        
+        .box-number {
+            width: 40px;
+            font-weight: bold;
+            margin-right: 15px;
+        }
+        
+        .box-image {
+            width: 100px;
+            height: 100px;
+            object-fit: cover;
+            margin-right: 20px;
+            margin-left: 10px;
+        }
+        
+        .box-text {
+            flex-grow: 1;
+        }
+
+        p {
+            margin: 5px 0 0;
+            font-size: 16px;
+            color: #999999;
+        }
+        
+        .container {
+            display: none;
+            z-index: 1000;
+        }
+        
+        .container.active {
+            display: block;
+        }
+        
+        #scroll-buttons {
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            margin-right: 10px;
+        }
+        
+        #scroll-buttons button {
+            background: none;
+            border: none;
+            font-size: 24px;
+            cursor: pointer;
+            margin: 5px 0;
+        }
+
+        .dynamic-box {
+            width: 100%;
+            height: 140px;
+            border-radius: 18px;
+            border: 3px solid #f2f0ef;
+            background-color: white;
+            display: flex;
+            align-items: center;
+            padding: 10px;
+            margin-bottom: 10px;
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+        }
+        
+        .dynamic-box:hover {
+            background: #f5f5f5;
+        }
+        /* Left panel styling */
+
+
+        /* Right panel styling */
+        #right-dashboard {
+            width: 30%;
+            height: 100%;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            padding-left: 12px;
+            position: relative;
+            border-left: 2px solid #E5E5E5;
+        }
+        
+        .upp {
+            position: absolute;
+            top: 0;
+            width: 100%;
+        }
+
+        .downn {
+            position: absolute;
+            bottom: 0;
+        }
+
+        #gap {
+            margin-bottom: 96px;
+        }
+
+        
+        #updatingtitle {
+            margin: 0;
+            font-size: 56px;
+            margin-bottom: 36px;
+        }
+
+        .horizontal-line {
+            border-top: 2px solid #999999;
+            width: 80%;
+        }
+
+        #breakdown {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            width: 80%;
+        }
+
+        
+        #option-bars { /*  dropdowns */
+            display: flex;
+            flex-direction: column;
+            width: calc(100% - 24px);
+            margin-top: 24px;
+            
+        }
+
+        #option-bars select { /*  dropdowns */
+            font-size: 24px;
+            border-top: none;
+            font-weight: bold;
+        }
+
+        #entitySelect:hover ,
+        #timeSelect:hover { /*  dropdowns */
+            background-color: black;
+            color: white;
+        }
+
+        #entitySelect,
+        #timeSelect { /*  dropdowns */
+            height: 80px;
+            border-bottom: 2px solid #E5E5E5;
+            border-right: none;
+            border-left: none;
+            background-color: #F4F4F4;
+        }
+        /* Right panel styling */
+        
+
+        /* bottom styling */
+        #info {
+            width: 100%;
+            height: 10%;
+            border-top: 2px solid #E5E5E5;
+            display: flex;
+        }
+
+        #logo {
+            margin: 20px;
+            aspect-ratio: 1 / 1;
+            height: calc(100% - 40px);
+        }
+
+        #copyright {
+            height: 100%; 
+            justify-content: end;
+            align-items: end;
+        }
+        /* bottom styling */
+    </style>
+</head>
+<body>
+    <section id="dashboard">
+        <div class="spacing">
+            <div class="vertical-line">
+                <h3 class="nav">16thJan</h3>
+            </div>
+            <div class="spacing-right">
+                <h3>
+                    <a id="newupload" class="nav" href="index.html">Upload Again</a>
+                </h3>
+            </div>
+        </div>
+        <div id="dashboard-container">
+            <div id="left-dashboard">
+                <div id="graph-container">
+                    <div id="scroll-buttons">
+                        <button id="scroll-up">&#x25B2;</button>
+                        <button id="scroll-down">&#x25BC;</button>
+                    </div>
+                    <div id="graph">
+                        <div id="container-1-1" class="container">
+                            <div class="box-container" id="boxes-1-1"></div>
+                        </div>
+                        <div id="container-1-2" class="container">
+                            <div class="box-container" id="boxes-1-2"></div>
+                        </div>
+                        <div id="container-1-3" class="container">
+                            <div class="box-container" id="boxes-1-3"></div>
+                        </div>
+                        <div id="container-1-4" class="container">
+                            <div class="box-container" id="boxes-1-4"></div>
+                        </div>
+                        <div id="container-2-1" class="container">
+                            <div class="box-container" id="boxes-2-1"></div>
+                        </div>
+                        <div id="container-2-2" class="container">
+                            <div class="box-container" id="boxes-2-2"></div>
+                        </div>
+                        <div id="container-2-3" class="container">
+                            <div class="box-container" id="boxes-2-3"></div>
+                        </div>
+                        <div id="container-2-4" class="container">
+                            <div class="box-container" id="boxes-2-4"></div>
+                        </div>
+                        <div id="container-3-1" class="container">
+                            <div class="box-container" id="boxes-3-1"></div>
+                        </div>
+                        <div id="container-3-2" class="container">
+                            <div class="box-container" id="boxes-3-2"></div>
+                        </div>
+                        <div id="container-3-3" class="container">
+                            <div class="box-container" id="boxes-3-3"></div>
+                        </div>
+                        <div id="container-3-4" class="container">
+                            <div class="box-container" id="boxes-3-4"></div>
+                        </div>
+                        <div id="container-4-1" class="container">
+                            <div class="box-container" id="boxes-4-1"></div>
+                        </div>
+                        <div id="container-4-2" class="container">
+                            <div class="box-container" id="boxes-4-2"></div>
+                        </div>
+                        <div id="container-4-3" class="container">
+                            <div class="box-container" id="boxes-4-3"></div>
+                        </div>
+                        <div id="container-4-4" class="container">
+                            <div class="box-container" id="boxes-4-4"></div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div id="right-dashboard">
+                <h3 class="upp">Your Music, Your Stats</h3>
+                <h1 style="font-size: 36px;">Top</h1>
+                <h1 id="updatingtitle">See your stats come to life</h1>
+                <div id="gap">
+                    <h3>See your Stats Come to Life</h1>
+                    <div class="horizontal-line"></div>
+                    <div id="breakdown">
+                        <h3>Want to see a further breakdown... </h3>
+                        <a href="http://"></a><h3>View More -></h3>
+                    </div>
+                    
+                </div>
+                <div id="option-bars" class="downn">
+                    <h3>Music focus • Time frame</h3>
+                    <select id="entitySelect">
+                        <option value="1">Tracks</option>
+                        <option value="2">Albums</option>
+                        <option value="3">Artists</option>
+                        <option value="4">Genre</option>
+                    </select>
+                    <select id="timeSelect">
+                        <option value="1">1 Week</option>
+                        <option value="2">1 Month</option>
+                        <option value="3">1 Year</option>
+                        <option value="4">All Time</option>
+                    </select>
+                </div>
+            </div>
+        </div>
+        <div class="spacing">
+            <div class="vertical-line"></div>
+        </div>
+        <div id="info">
+            <div class="vertical-line">
+                <img id="logo" src="/logo.png" alt="">
+            </div>
+            <div class="spacing-right">
+                <h3 id="copyright" class="nav">©2025 Reuben Mattam & Elijah Gadong</h3>
+            </div>
+        </div>
+    </section>
+
+    <script>        
+        document.addEventListener("DOMContentLoaded", function () {
+            updateContainer();
+            updateTitle();
+        
+            const graph = document.getElementById('graph');
+            const scrollUpButton = document.getElementById('scroll-up');
+            const scrollDownButton = document.getElementById('scroll-down');
+            let scrollInterval;
+        
+            scrollUpButton.addEventListener('click', () => {
+                graph.scrollBy({ top: -100, behavior: 'smooth' });
+            });
+            scrollDownButton.addEventListener('click', () => {
+                graph.scrollBy({ top: 100, behavior: 'smooth' });
+            });
+        
+            scrollUpButton.addEventListener('mousedown', function () {
+                scrollInterval = setInterval(() => {
+                graph.scrollBy({ top: -10 });
+              }, 50); // scroll speed !!
+            });
+            scrollDownButton.addEventListener('mousedown', function () {
+                scrollInterval = setInterval(() => {
+                graph.scrollBy({ top: 10 });
+                }, 50);
+            });
+        
+            scrollUpButton.addEventListener('mouseup', function () {
+                clearInterval(scrollInterval);
+            });
+            scrollUpButton.addEventListener('mouseleave', function () {
+                clearInterval(scrollInterval);
+            });
+            scrollDownButton.addEventListener('mouseup', function () {
+                clearInterval(scrollInterval);
+            });
+            scrollDownButton.addEventListener('mouseleave', function () {
+                clearInterval(scrollInterval);
+            });
+        
+            // local storage data loaded !
+            const storedData = localStorage.getItem('musicData');
+            if (storedData) {
+                currentTopMusic = JSON.parse(storedData);
+                updateContainer();
+                updateTitle();
+            }
+        });
+        
+        const selectedOptions = { 1: "1", 2: "1" };
+
+        // update selectedOptions when dropdowns change
+        document.getElementById('entitySelect').addEventListener('change', function() {
+            selectedOptions[1] = this.value;
+            updateContainer();
+            updateTitle();
+        });
+
+        document.getElementById('timeSelect').addEventListener('change', function() {
+            selectedOptions[2] = this.value;
+            updateContainer();
+            updateTitle();
+        });
+        
+        function updateContainer() {
+            // hide all the containers first !!
+            document.querySelectorAll(".container").forEach(container => {
+                container.classList.remove("active");
+            });
+
+            // construct the container ID based on selected options :)
+            const containerKey = `container-${selectedOptions[1]}-${selectedOptions[2]}`;
+            const activeContainer = document.getElementById(containerKey);
+            const boxesId = `boxes-${selectedOptions[1]}-${selectedOptions[2]}`;
+            const boxContainer = document.getElementById(boxesId);
+
+            // clear current existing boxes
+            boxContainer.innerHTML = '';
+
+            // get the datakey from mappings
+            const periodMap = {1: 'week', 2: 'month', 3: 'year', 4: 'alltime'};
+            const typeMap = {1: 'tracks', 2: 'albums', 3: 'artists', 4: 'genres'};
+            const dataKey = `${periodMap[selectedOptions[2]]}_${typeMap[selectedOptions[1]]}`;
+
+            // create boxes if data exists
+            if (currentTopMusic && currentTopMusic[dataKey]) {
+                const items = currentTopMusic[dataKey];
+                items.details.forEach((detail, index) => {
+                    const box = createBoxElement(detail, index + 1, typeMap[selectedOptions[1]]);
+                    boxContainer.appendChild(box);
+                });
+            }
+
+            // show the selected container
+            if (activeContainer) {
+                activeContainer.classList.add("active");
+            }
+        }
+        
+        function updateTitle() {
+            const titleElement = document.getElementById("updatingtitle");
+            const entitySelect = document.getElementById("entitySelect");
+            const timeSelect = document.getElementById("timeSelect");
+            const entityText = entitySelect.options[entitySelect.selectedIndex].text;
+            const timeText = timeSelect.options[timeSelect.selectedIndex].text;
+            titleElement.textContent = `${entityText} • ${timeText}`;
+        }
+
+        let currentTopMusic = null;
+
+        // initialize using the data from local storage
+        window.addEventListener('DOMContentLoaded', () => {
+            const storedData = localStorage.getItem('musicData');
+            if (storedData) {
+                currentTopMusic = JSON.parse(storedData);
+                updateContainer();
+                updateTitle();
+            }
+        });
+
+        // create box elements !
+        function createBoxElement(itemData, rank, type) {
+            const box = document.createElement('div');
+            box.className = 'box dynamic-box';
+            
+            const number = document.createElement('div');
+            number.className = 'box-number';
+            number.textContent = `#${rank}`;
+            
+            const content = document.createElement('div');
+            content.style.display = 'flex';
+            content.style.alignItems = 'center';
+            content.style.flexGrow = '1';
+        
+            if (type === 'genres') {
+                const genre = document.createElement('div');
+                genre.textContent = itemData.Genre;
+                content.appendChild(genre);
+            } else {
+                const img = document.createElement('img');
+                img.className = 'box-image';
+        
+                if (type === 'tracks') {
+                    img.src = itemData['Track Image'];
+                    const text = document.createElement('div');
+                    text.innerHTML = `<h2>${itemData['Song Name']}</h2><p>${itemData.Artist}</p>`;
+                    content.append(img, text);
+                } else if (type === 'albums') {
+                    img.src = itemData['Album Image'];
+                    const text = document.createElement('div');
+                    text.innerHTML = `<h2>${itemData.Album}</h2><p>${itemData.Artist}</p>`;
+                    content.append(img, text);
+                } else if (type === 'artists') {
+                    img.src = itemData['Artist Image'];
+                    const text = document.createElement('div');
+                    text.innerHTML = `<h2>${itemData.Artist}</h2>`;
+                    content.append(img, text);
+                }
+            }
+        
+            box.append(content, number);
+            return box;
+        }
+
+        // eel for processed data !
+        eel.expose(handleProcessedData);
+        async function processFile() {
+            const fileInput = document.getElementById('fileInput');
+            const file = fileInput.files[0];
+        
+            if (file) {
+                const reader = new FileReader();
+                reader.onload = async function(e) {
+                    const data = await eel.process_file(file.name, e.target.result)();
+                    handleProcessedData(data);
+                };
+                reader.readAsDataURL(file);
+            }
+        }
+    </script>
+</body>
+</html>
