@@ -62,7 +62,6 @@
         </div>
     </section>
     <script>
-        // upload the file
         document.addEventListener('DOMContentLoaded', function() {
             const fileInput = document.getElementById('file-input');
             
@@ -73,24 +72,74 @@
                     
                     reader.onload = async function(e) {
                         try {
+                            console.log('Starting file processing...');
                             const result = await eel.process_file(file.name, e.target.result)();
                             
+                            console.log('Processing result:', result);
+                            
                             if (result.success) {
-                                // data stored in local storage
-                                localStorage.setItem('musicData', JSON.stringify(result.top_music));
-                                window.location.href = 'main.html';
+                                try {
+                                    console.log('Attempting to save to localStorage');
+                                    const dataString = JSON.stringify(result.top_music);
+                                    localStorage.setItem('musicData', dataString);
+                                    
+                                    console.log('Data saved to localStorage, redirecting...');
+                                    window.location.href = 'main.html';
+                                } catch (storageError) {
+                                    console.error('Storage error:', storageError);
+                                    alert('Storage error: ' + storageError.message);
+                                }
                             } else {
+                                console.error('Processing failed:', result.message);
                                 alert('Error processing file: ' + result.message);
                             }
                         } catch (error) {
-                            console.error('Error processing file:', error);
-                            alert('There was an error uploading the file. Please try again.');
+                            console.error('Full processing error:', error);
+                            alert('Error processing file: ' + error.message);
                         }
                     };
                     
-                    reader.onerror = function() {
-                        console.error('Error reading file');
-                        alert('Error reading the file. Please try again.');
+                    reader.onload = async function(e) {
+                        try {
+                            console.log('Starting file processing...');
+                            const result = await eel.process_file(file.name, e.target.result)();
+                            
+                            console.log('Processing result:', result);
+                            
+                            if (result.success) {
+                                try {
+                                    console.log('Attempting to save to localStorage');
+                                    
+                                    // serialization safeguard (issues with stack overflow method so safegaurd)
+                                    const safeStringify = (obj) => {
+                                        const seen = new WeakSet();
+                                        return JSON.stringify(obj, (key, value) => {
+                                            if (typeof value === 'object' && value !== null) {
+                                                if (seen.has(value)) {
+                                                    return;
+                                                }
+                                                seen.add(value);
+                                            }
+                                            return value;
+                                        });
+                                    };
+                                    
+                                    localStorage.setItem('musicData', safeStringify(result.top_music));
+                                    
+                                    console.log('Data saved to localStorage, redirecting...');
+                                    window.location.href = 'main.html';
+                                } catch (storageError) {
+                                    console.error('Storage error:', storageError);
+                                    alert('Storage error: ' + storageError.message);
+                                }
+                            } else {
+                                console.error('Processing failed:', result.message);
+                                alert('Error processing file: ' + result.message);
+                            }
+                        } catch (error) {
+                            console.error('Full processing error:', error);
+                            alert('Error processing file: ' + error.message);
+                        }
                     };
                     
                     reader.readAsDataURL(file);

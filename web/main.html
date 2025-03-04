@@ -13,6 +13,7 @@
     <link href="https://fonts.googleapis.com/css2?family=Lexend:wght@100..900&display=swap" rel="stylesheet">
     
     <link rel="icon" type="image/png" href="/logo.png">
+
     <style>
         body {
             background-color: #F4F4F4;
@@ -499,6 +500,7 @@
             boxContainer.innerHTML = '';
 
             // get the datakey from mappings
+            // reference: https://stackoverflow.com/questions/44996143/how-do-i-link-the-data-key-attribute-of-two-elements-using-javascript
             const periodMap = {1: 'week', 2: 'month', 3: 'year', 4: 'alltime'};
             const typeMap = {1: 'tracks', 2: 'albums', 3: 'artists', 4: 'genres'};
             const dataKey = `${periodMap[selectedOptions[2]]}_${typeMap[selectedOptions[1]]}`;
@@ -540,6 +542,8 @@
         });
 
         // create box elements !
+        // reference: https://stackoverflow.com/questions/14004117/create-div-and-append-div-dynamically
+        // https://www.tutorialspoint.com/how-to-dynamically-create-new-elements-in-javascript
         function createBoxElement(itemData, rank, type) {
             const box = document.createElement('div');
             box.className = 'box dynamic-box';
