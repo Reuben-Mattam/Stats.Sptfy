@@ -1,4 +1,4 @@
-# Tracker.Sptfy
+# Stats.Sptfy
 Spotify Stats App    
 This program requires the excel output from Tracker.Sptfy, https://github.com/Reuben-Mattam/Tracker.Sptfy, or you can use the sample data provided in the excel doccument.  
   
